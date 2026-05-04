@@ -1,11 +1,24 @@
 const express = require('express');
+// Polyfill for 'File is not defined' error in older Node.js versions
+if (typeof File === 'undefined') {
+    const { Blob } = require('buffer');
+    if (typeof Blob !== 'undefined') {
+        global.File = class File extends Blob {
+            constructor(parts, filename, options = {}) {
+                super(parts, options);
+                this.name = filename;
+                this.lastModified = options.lastModified || Date.now();
+            }
+        };
+    }
+}
 const axios = require('axios');
 const cheerio = require('cheerio');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10;
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, './')));
