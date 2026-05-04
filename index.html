@@ -521,7 +521,7 @@ async function fillTicker(containerId) {
           <span class="status-tag ${top.status.toLowerCase().includes('won')?'status-won':'status-leading'}">${top.status}</span>
         </div>
         <div class="ticker-candidate">${top.candidate}</div>
-        <div class="ticker-party">${top.party}</div>
+        <div class="ticker-party" style="color:var(--${getAlliance(top.party).toLowerCase()}-color);font-weight:700">${getAlliance(top.party)}</div>
         <div class="ticker-stat">
           <span style="font-size:9px;color:var(--udf-color);font-weight:800;letter-spacing:1px">LEAD MARGIN</span>
           <span class="ticker-votes" style="color:var(--udf-color)">+ ${lead.toLocaleString()}</span>
@@ -549,16 +549,18 @@ async function fetchConstituency(id) {
   const secondVotes = data.candidates[1]?.votes || 0;
   const margin = topVotes - secondVotes;
 
-  tbody.innerHTML = data.candidates.map((c, i) => `
+  tbody.innerHTML = data.candidates.map((c, i) => {
+    const a = getAlliance(c.party);
+    return `
     <tr style="${i===0?'background:rgba(255,255,255,0.05)':''}">
       <td>${c.candidate} ${i===0?'<span style="font-size:9px;color:var(--udf-color);margin-left:8px">● LEADING</span>':''}</td>
-      <td><div style="font-size:10px">${c.party}</div></td>
+      <td><span class="alliance-tag tag-${a.toLowerCase()}">${a}</span></td>
       <td style="text-align:right" class="num">${c.votes.toLocaleString()}</td>
       <td style="text-align:center">
         ${i === 0 ? `<span class="status-tag status-leading" style="background:var(--udf-color);color:#fff">Lead: ${margin.toLocaleString()}</span>` : `<span class="status-tag">${c.status}</span>`}
       </td>
     </tr>
-  `).join('');
+  `}).join('');
   document.getElementById('const-result').style.display = 'block';
   document.getElementById('const-status').style.display = 'none';
 }

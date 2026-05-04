@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.static(path.join(__dirname, './')));
+
 
 const BASE_URL = 'https://results.eci.gov.in/ResultAcGenMay2026/';
 const PARTYWISE_URL = `${BASE_URL}partywiseresult-S11.htm`;
